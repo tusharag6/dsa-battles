@@ -10,15 +10,15 @@
     "format": "biome check --write .",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepare": "husky"
+    "prepare": "husky",
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "husky": "^9.1.5",
     "lint-staged": "^15.2.10",
+    "supabase": "^1.191.3",
     "turbo": "^2.1.1"
   },
-
   "lint-staged": {
     "*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
   },
