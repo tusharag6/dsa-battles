@@ -2,46 +2,35 @@
   "name": "@repo/ui",
   "version": "0.0.0",
   "private": true,
-  "license": "MIT",
-  "sideEffects": false,
-  "files": [
-    "dist/**"
-  ],
-  "exports": {
-    "./counter-button": {
-      "require": "./dist/counter-button/index.js",
-      "import": "./dist/counter-button/index.mjs",
-      "types": "./src/counter-button/index.tsx"
-    },
-    "./link": {
-      "require": "./dist/link/index.js",
-      "import": "./dist/link/index.mjs",
-      "types": "./src/link/index.tsx"
-    }
-  },
   "scripts": {
-    "build": "tsup",
-    "clean": "rm -rf dist",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint src/",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "@repo/jest-presets/browser"
+    "lint": "eslint . --max-warnings 0",
+    "generate:component": "turbo gen react-component"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/jest-presets": "*",
     "@repo/typescript-config": "*",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.24",
-    "@types/react": "^18.2.62",
-    "@types/react-dom": "^18.2.19",
-    "jest": "^29.7.0",
+    "@turbo/gen": "^1.11.3",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tsup": "^8.0.2",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.330.0",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "exports": {
+    ".": "./src/components/index.ts",
+    "./main.css": "./main.css",
+    "./postcss.config": "./postcss.config.js",
+    "./tailwind.config": "./tailwind.config.js",
+    "./lib/*": "./src/lib/*.ts"
   }
 }
