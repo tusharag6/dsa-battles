@@ -10,7 +10,7 @@
     "format": "biome check --write .",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepare": "husky",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
