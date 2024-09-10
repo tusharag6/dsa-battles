@@ -11,6 +11,7 @@ import App from "./App";
 import Home from "./pages/Home";
 import Match from "./pages/Match";
 import Matchmaking from "./pages/Matchmaking";
+import Result from "./pages/Result";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/match" element={<Matchmaking />} />
       <Route path="/match/:matchId" element={<Match />} />
+      <Route path="/result" element={<Result />} />
     </Route>,
   ),
 );

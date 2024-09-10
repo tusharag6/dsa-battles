@@ -23,3 +23,23 @@ export {
   SelectScrollDownButton,
 } from "./ui/select";
 export { Slider } from "./ui/slider";
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./ui/dialog";
+
+export {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "./ui/resizable";
+
+export { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
