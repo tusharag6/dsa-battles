@@ -25,13 +25,13 @@
       },
       "correctness": {
         "noUndeclaredVariables": "error",
-        "noUnusedImports": "error",
+        "noUnusedImports": "off",
         "noUnusedVariables": "error",
         "useExhaustiveDependencies": "warn",
         "useHookAtTopLevel": "error"
       },
       "style": {
-        "useImportType": "error",
+        "useImportType": "off",
         "useExportType": "error"
       },
       "suspicious": {

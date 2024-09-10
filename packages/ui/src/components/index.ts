@@ -1,1 +1,25 @@
-export * from "./ui/button";
+export { Button, buttonVariants } from "./ui/button";
+export type { ButtonProps } from "./ui/button";
+export { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+export { Label } from "./ui/label";
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from "./ui/select";
+export { Slider } from "./ui/slider";
