@@ -1,22 +1,10 @@
 import * as monaco from "monaco-editor";
 import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
-import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
-import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
 import React, { useRef, useEffect } from "react";
 
 self.MonacoEnvironment = {
   getWorker(_, label) {
-    if (label === "json") {
-      return new jsonWorker();
-    }
-    if (label === "css" || label === "scss" || label === "less") {
-      return new cssWorker();
-    }
-    if (label === "html" || label === "handlebars" || label === "razor") {
-      return new htmlWorker();
-    }
     if (label === "typescript" || label === "javascript") {
       return new tsWorker();
     }
@@ -39,25 +27,64 @@ const customTheme: monaco.editor.IStandaloneThemeData = {
   },
 };
 
-const MonacoEditor: React.FC = () => {
+interface MonacoEditorProps {
+  language?: string;
+  initialCode?: string;
+}
+
+const MonacoEditor: React.FC<MonacoEditorProps> = ({
+  language = "javascript",
+  initialCode = "// Your code here",
+}) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor | null>(
+    null,
+  );
 
   useEffect(() => {
     if (editorRef.current) {
       // Define the custom theme
       monaco.editor.defineTheme("customTheme", customTheme);
 
-      // Create the editor
-      const editor = monaco.editor.create(editorRef.current, {
-        value: "// Your code here",
-        language: "typescript",
+      // Create the editor with simplified options
+      editorInstance.current = monaco.editor.create(editorRef.current, {
+        value: initialCode,
+        language: language,
         theme: "customTheme",
+        minimap: { enabled: false },
+        scrollbar: {
+          vertical: "visible",
+          horizontal: "visible",
+        },
+        lineNumbers: "on",
+        folding: false,
+        links: false,
+        contextmenu: false,
+        quickSuggestions: false,
+        parameterHints: { enabled: false },
+        suggestOnTriggerCharacters: false,
+        acceptSuggestionOnEnter: "off",
+        tabCompletion: "off",
+        wordBasedSuggestions: "off",
+        renderLineHighlight: "line",
+        roundedSelection: false,
+        automaticLayout: true,
       });
 
+      // Disable the command palette
+      editorInstance.current.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP,
+        () => {
+          // Do nothing
+        },
+      );
+
       // Clean up
-      return () => editor.dispose();
+      return () => {
+        editorInstance.current?.dispose();
+      };
     }
-  }, []);
+  }, [language, initialCode]);
 
   return <div ref={editorRef} style={{ width: "100%", height: "100%" }} />;
 };

@@ -43,3 +43,19 @@ export {
 } from "./ui/resizable";
 
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+
+export { Badge, badgeVariants } from "./ui/badge";
+export type { BadgeProps } from "./ui/badge";
+
+export { Progress } from "./ui/progress";
+
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from "./ui/table";

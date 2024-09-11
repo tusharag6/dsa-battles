@@ -1,11 +1,4 @@
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@repo/ui";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@repo/ui";
 import {
   Select,
@@ -15,21 +8,44 @@ import {
   SelectValue,
 } from "@repo/ui";
 import { Card } from "@repo/ui";
-import { useEffect, useState } from "react";
-import React from "react";
+import React, { useState } from "react";
+import MatchHeader from "../components/MatchHeader";
 import MonacoEditor from "../components/MonacoEditor";
 
 export default function Match() {
-  const [opponentStatusOpen, setOpponentStatusOpen] = useState(false);
-  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [language, setLanguage] = useState("javascript");
+  const handleRun = () => {
+    // Logic to run test cases
+    console.log("Running test cases...");
+  };
+
+  const handleSubmit = () => {
+    // Logic to submit the problem
+    console.log("Submitting solution...");
+  };
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
+      {/* <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="font-bold text-lg">Time Remaining:</div>
           <div className="text-lg font-bold">12:34</div>
+        </div>
+        <div>
+          <Button
+            className="text-primary-foreground rounded-md"
+            variant={"outline"}
+          >
+            <Play className="w-5 h-5 mr-2" />
+            <span>Run</span>
+          </Button>
+          <Button
+            className="text-primary-foreground rounded-md"
+            variant={"outline"}
+          >
+            <CloudUpload className="w-5 h-5 mr-2" />
+            <span>Submit</span>
+          </Button>
         </div>
         <div className="flex items-center gap-4">
           <Button
@@ -38,7 +54,7 @@ export default function Match() {
             className="text-primary-foreground hover:bg-primary/20"
             onClick={() => setOpponentStatusOpen(true)}
           >
-            <ShieldOffIcon className="w-5 h-5" />
+            <ShieldOff className="w-5 h-5" />
             <span className="sr-only">Opponent Status</span>
           </Button>
           <Dialog
@@ -80,16 +96,20 @@ export default function Match() {
             <div className="text-lg font-bold">120 / 200</div>
           </div>
         </div>
-      </header>
-      <ResizablePanelGroup direction="horizontal">
-        <div className="flex flex-row gap-8 p-8">
-          <ResizablePanel>
-            <Tabs defaultValue="description" className="">
-              <TabsList>
+      </header> */}
+      <MatchHeader onRun={handleRun} onSubmit={handleSubmit} />
+      <ResizablePanelGroup direction="horizontal" className="flex-grow">
+        <ResizablePanel defaultSize={40} minSize={30}>
+          <div className="h-full p-6 overflow-auto">
+            <Tabs defaultValue="description" className="h-full">
+              <TabsList className="mb-4">
                 <TabsTrigger value="description">Description</TabsTrigger>
                 <TabsTrigger value="testcase">Test Cases</TabsTrigger>
               </TabsList>
-              <TabsContent value="description">
+              <TabsContent
+                value="description"
+                className="flex-grow overflow-auto"
+              >
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold">Problem Statement</h2>
@@ -126,120 +146,72 @@ export default function Match() {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="testcase">
-                <div>
+              <TabsContent value="testcase" className="flex-grow overflow-auto">
+                <div className="space-y-4">
                   <h2 className="text-2xl font-bold">Test Cases</h2>
                   <Card className="p-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium">Test Case 1</div>
-                        <div className="text-muted-foreground">
-                          [2, 4, 1, 5, 3, 5]
+                    {[
+                      {
+                        name: "Test Case 1",
+                        input: "[2, 4, 1, 5, 3, 5]",
+                        status: "Passed",
+                      },
+                      {
+                        name: "Test Case 2",
+                        input: "[1, 2, 3, 1]",
+                        status: "Passed",
+                      },
+                      {
+                        name: "Test Case 3",
+                        input: "[0, 0, 0, 0, 0, 0]",
+                        status: "Passed",
+                      },
+                    ].map((testCase, index) => (
+                      <div
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                        key={index}
+                        className="flex items-center justify-between p-2 rounded-lg bg-secondary"
+                      >
+                        <div>
+                          <div className="font-medium">{testCase.name}</div>
+                          <div className="text-muted-foreground text-sm">
+                            {testCase.input}
+                          </div>
+                        </div>
+                        <div className="bg-success text-success-foreground px-3 py-1 rounded-full text-sm font-medium">
+                          {testCase.status}
                         </div>
                       </div>
-                      <div className="bg-success text-success-foreground px-3 py-1 rounded-full text-sm font-medium">
-                        Passed
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium">Test Case 2</div>
-                        <div className="text-muted-foreground">
-                          [1, 2, 3, 1]
-                        </div>
-                      </div>
-                      <div className="bg-success text-success-foreground px-3 py-1 rounded-full text-sm font-medium">
-                        Passed
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium">Test Case 3</div>
-                        <div className="text-muted-foreground">
-                          [0, 0, 0, 0, 0, 0]
-                        </div>
-                      </div>
-                      <div className="bg-success text-success-foreground px-3 py-1 rounded-full text-sm font-medium">
-                        Passed
-                      </div>
-                    </div>
+                    ))}
                   </Card>
-                  <Button className="mt-4 w-full">Submit</Button>
+                  <Button className="w-full">Run Tests</Button>
                 </div>
               </TabsContent>
             </Tabs>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel>
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold">Code Editor</h2>
-                <div className="mb-2 flex flex-row gap-4">
-                  <Select value={language} onValueChange={setLanguage}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="javascript">JavaScript</SelectItem>
-                      <SelectItem value="cpp">C++</SelectItem>
-                      <SelectItem value="java">Java</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button>Submit</Button>
-                </div>
-
-                <div className="h-[600px] rounded-lg border bg-card text-card-foreground">
-                  <MonacoEditor />
-                </div>
-              </div>
+          </div>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={60} minSize={40}>
+          <div className="h-full p-6 flex flex-col">
+            <h2 className="text-2xl font-bold mb-4">Code Editor</h2>
+            <div className="mb-4 flex items-center gap-4">
+              <Select value={language} onValueChange={setLanguage}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="javascript">JavaScript</SelectItem>
+                  <SelectItem value="cpp">C++</SelectItem>
+                  <SelectItem value="java">Java</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </ResizablePanel>
-        </div>
+            <div className="flex-grow rounded-lg border bg-card text-card-foreground overflow-hidden">
+              <MonacoEditor language={language} />
+            </div>
+          </div>
+        </ResizablePanel>
       </ResizablePanelGroup>
     </div>
-  );
-}
-
-function BadgeIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-    </svg>
-  );
-}
-
-function ShieldOffIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m2 2 20 20" />
-      <path d="M5 5a1 1 0 0 0-1 1v7c0 5 3.5 7.5 7.67 8.94a1 1 0 0 0 .67.01c2.35-.82 4.48-1.97 5.9-3.71" />
-      <path d="M9.309 3.652A12.252 12.252 0 0 0 11.24 2.28a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1v7a9.784 9.784 0 0 1-.08 1.264" />
-    </svg>
   );
 }
