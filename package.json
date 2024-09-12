@@ -8,6 +8,9 @@
     "lint:fix": "biome check --write --unsafe .",
     "lint:staged": "biome check --error-on-warnings --no-errors-on-unmatched --staged .",
     "format": "biome check --write .",
+    "db:generate": "bun --filter=@repo/db db:generate",
+    "db:migrate": "bun --filter=@repo/db db:migrate",
+    "db:studio": "bun --filter=@repo/db db:studio",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "prepare": "husky"
