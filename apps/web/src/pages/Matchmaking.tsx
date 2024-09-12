@@ -7,11 +7,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui";
-import { Slider } from "@repo/ui";
 import { Button } from "@repo/ui";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { redirect } from "react-router-dom";
+import { io } from "socket.io-client";
+import { generateRandomUsername } from "../utils/generateRandomUsername";
 
+const socket = io("http://localhost:5001");
 export default function Component() {
+  const [_isMatched, setIsMatched] = useState(false);
+  const [_opponent, setOpponent] = useState(null);
+  const [_matchTimeout, setMatchTimeout] = useState(false);
+  const [isFindingMatch, setIsFindingMatch] = useState(false);
+
+  const handleJoinQueue = () => {
+    setIsFindingMatch(true);
+    socket.emit("joinQueue", {
+      username: generateRandomUsername(),
+    });
+  };
+
+  useEffect(() => {
+    // Listen for match result
+    socket.on("matched", (data) => {
+      setIsMatched(true);
+      setOpponent(data.opponent);
+      setIsFindingMatch(false);
+      redirect("/match/");
+    });
+
+    // Listen for match timeout
+    socket.on("matchTimeout", (data) => {
+      setMatchTimeout(true);
+      console.log(data);
+      setIsFindingMatch(false);
+    });
+
+    return () => {
+      socket.off("matched");
+      socket.off("matchTimeout");
+    };
+  }, []);
+
   return (
     <div className="container mx-auto px-4 md:px-6 py-10">
       <div className="space-y-6">
@@ -55,7 +92,15 @@ export default function Component() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Find Match</Button>
+            {isFindingMatch ? (
+              <Button className="w-full" disabled>
+                Finding Match...
+              </Button>
+            ) : (
+              <Button className="w-full" onClick={handleJoinQueue}>
+                Find Match
+              </Button>
+            )}
           </CardFooter>
         </Card>
       </div>
