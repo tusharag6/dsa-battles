@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "esnext", // or "commonjs"
+    "target": "es5",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "declaration": true,
+    "outDir": "./dist"
+  },
+  "include": ["."],
+  "exclude": ["dist", "node_modules", "**/*.spec.ts"]
+}
