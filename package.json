@@ -4,6 +4,8 @@
   "description": "",
   "scripts": {
     "dev:web": "pnpm dlx nx dev web",
+    "dev:server":"pnpm dlx nx dev server",
+    "dev":"pnpm dlx nx run-many --target=dev --all",
     "build:ui": "pnpm dlx nx build @dsa-battle/shared-ui",
     "build:all": "pnpm dlx nx run-many --target=build --all"
   },

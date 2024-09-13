@@ -1,9 +1,16 @@
-import { Button } from "@dsa-battle/shared-ui";
-import "./App.css";
+import { cn } from "@/lib/utils";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Footer from "./components/Footer";
+
 function App() {
   return (
-    <div>
-      <Button onClick={() => console.log("clicked")}>Click me</Button>
+    <div className={cn("antialiased")}>
+      <div className="min-h-screen flex flex-col bg-background">
+        <main className="flex-grow">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
