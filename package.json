@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev:web":"pnpm --filter web dev",
-    "build:ui":"pnpm --filter @dsa-battle/shared-ui build",
-    "build:all":"pnpm run -r build",
-    "build:parallel":"pnpm run --parallel -r build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:web": "pnpm dlx nx dev web",
+    "build:ui": "pnpm dlx nx build @dsa-battle/shared-ui",
+    "build:all": "pnpm dlx nx run-many --target=build --all"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nx": "19.7.3"
+  }
 }
