@@ -1,12 +1,13 @@
-import { Button } from "@repo/ui";
+import { Button } from "@/components/ui/button";
 import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
+      {/* Header Section */}
       <header className="px-4 md:px-6 py-4 border-b">
-        <div className="container flex items-center justify-between">
+        <div className="container mx-auto flex items-center justify-between">
           <Link to="#" className="flex items-center gap-2">
             <TrophyIcon className="w-6 h-6 text-primary" />
             <span className="text-xl font-bold">DSA League</span>
@@ -24,9 +25,12 @@ export default function Hero() {
           </Button>
         </div>
       </header>
-      <main className="flex-1 container py-12 md:py-20">
+
+      {/* Main Section */}
+      <main className="flex-1 container mx-auto flex items-center justify-center py-12 md:py-20">
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-4">
+          {/* Text Section */}
+          <div className="space-y-4 text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
               Welcome to the DSA League - Compete and Climb the Ranks
             </h1>
@@ -34,11 +38,15 @@ export default function Hero() {
               Compete in thrilling matches and climb the ranks to become the
               ultimate champion.
             </p>
-            <Button size={"lg"} asChild>
-              <Link to="/match">Start a Match</Link>
-            </Button>
+            <div className="flex justify-center md:justify-start">
+              <Button size={"lg"} asChild>
+                <Link to="/match">Start a Match</Link>
+              </Button>
+            </div>
           </div>
-          <div className="relative">
+
+          {/* Image Section */}
+          <div className="relative flex justify-center">
             <div className="absolute -top-8 -right-8 w-32 h-32 bg-primary rounded-full blur-[100px] opacity-50" />
             <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-secondary rounded-full blur-[100px] opacity-50" />
             <img
@@ -57,7 +65,7 @@ export default function Hero() {
 }
 
 function TrophyIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
+  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
 ) {
   return (
     <svg

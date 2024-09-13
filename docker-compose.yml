@@ -11,27 +11,27 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
+    # networks:
+    #   - app-network
 
-  db-migrate:
-    build:
-      context: .
-      dockerfile: packages/db/Dockerfile
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-    depends_on:
-      - postgres
-    networks:
-      - app-network
+#   db-migrate:
+#     build:
+#       context: .
+#       dockerfile: packages/db/Dockerfile
+#     environment:
+#       POSTGRES_HOST: postgres
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#       POSTGRES_DB: ${POSTGRES_DB}
+#       POSTGRES_PORT: ${POSTGRES_PORT}
+#     depends_on:
+#       - postgres
+#     networks:
+#       - app-network
 
-networks:
-  app-network:
-    driver: bridge
+# networks:
+#   app-network:
+#     driver: bridge
 
 volumes:
   postgres_data:

@@ -1,13 +1,13 @@
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@repo/ui";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
-import { Progress } from "@repo/ui";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -15,8 +15,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui";
-import { Badge } from "@repo/ui";
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Activity, Clock, Play, Send, ShieldOff, Trophy } from "lucide-react";
 import React, { useState } from "react";
 
