@@ -1,16 +1,21 @@
-import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@repo/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@repo/ui";
-import { Card } from "@repo/ui";
+} from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import React, { useState } from "react";
 import MatchHeader from "../components/MatchHeader";
 import MonacoEditor from "../components/MonacoEditor";
+import { Button } from "@/components/ui/button";
 
 export default function Match() {
   const [language, setLanguage] = useState("javascript");

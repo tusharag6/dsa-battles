@@ -1,4 +1,4 @@
-import { Button } from "@repo/ui";
+import { Button } from "@/components/ui/button";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -120,7 +120,7 @@ export default function Result() {
 }
 
 function HomeIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
+  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
 ) {
   return (
     <svg

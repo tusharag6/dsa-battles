@@ -1,14 +1,50 @@
-html {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1.5;
-  tab-size: 4;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 100% 6%;
+    --foreground: 180 100% 90%;
+    --primary: 200 100% 28%;
+    --primary-foreground: 180 100% 90%;
+    --secondary: 203 23% 30%;
+    --secondary-foreground: 180 100% 90%;
+    --accent: 198 70% 50%;
+    --accent-foreground: 185 10% 13%;
+    --destructive: 0 98% 44%;
+    --destructive-foreground: 0 0% 100%;
+    --muted: 200 50% 30%;
+    --muted-foreground: 180 100% 90%;
+    --card: 210 100% 12%;
+    --card-foreground: 180 100% 90%;
+    --popover: 210 100% 15%;
+    --popover-foreground: 180 100% 90%;
+    --border: 210 50% 40%;
+    --input: 210 50% 40%;
+    --ring: 180 100% 90%;
+    --radius: 0.75rem;
+  }
 }
 
-body {
-  margin: 0;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    /* @apply bg-background text-foreground, */
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+    font-family: "Space Mono", monospace;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Bricolage Grotesque", sans-serif;
+  }
 }

@@ -1,4 +1,4 @@
-import { cn } from "@repo/ui/lib/utils";
+import { cn } from "@/lib/utils";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "./components/Footer";
@@ -10,7 +10,6 @@ function App() {
         <main className="flex-grow">
           <Outlet />
         </main>
-        <Footer />
       </div>
     </div>
   );

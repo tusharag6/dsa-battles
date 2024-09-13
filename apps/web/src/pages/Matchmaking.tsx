@@ -1,17 +1,23 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@repo/ui";
-import { Label } from "@repo/ui";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@repo/ui";
-import { Button } from "@repo/ui";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { redirect } from "react-router-dom";
 import { io } from "socket.io-client";
-import { generateRandomUsername } from "../utils/generateRandomUsername";
+import { generateRandomUsername } from "../lib/generateRandomUsername";
 
 const socket = io("http://localhost:5001");
 export default function Component() {

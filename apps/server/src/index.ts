@@ -1,9 +1,9 @@
 import { createServer } from "node:http";
-import { log } from "@repo/logger";
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import { Server as SocketIOServer } from "socket.io";
+import { createMatch } from "./services/matchService";
 
 const app = express();
 app
@@ -25,7 +25,7 @@ const io = new SocketIOServer(httpServer, {
 let matchmakingQueue: { username: string; socketId: string }[] = [];
 const matchTimeouts = new Map();
 
-function matchPlayer() {
+async function matchPlayer() {
   if (matchmakingQueue.length >= 2) {
     const player1 = matchmakingQueue.shift() as {
       username: string;
@@ -39,7 +39,11 @@ function matchPlayer() {
     io.to(player1.socketId).emit("matched", { opponent: player2?.username });
     io.to(player2.socketId).emit("matched", { opponent: player1?.username });
 
-    log(`Matched players: ${player1.username} and ${player2.username}`);
+    // Create a new match
+    // TODO: use user id instead of username
+    await createMatch(player1.username, player2.username);
+
+    console.log(`Matched players: ${player1.username} and ${player2.username}`);
 
     // Clear timeouts for both players after they are matched
     if (matchTimeouts.has(player1.socketId)) {
@@ -57,7 +61,7 @@ io.on("connection", (socket) => {
   console.log("Client connected", socket.id);
 
   socket.on("joinQueue", ({ username }) => {
-    log(`Player joined queue: ${username}`);
+    console.log(`Player joined queue: ${username}`);
     matchmakingQueue.push({ username, socketId: socket.id });
 
     // Add a timeout to remove a user from the queue if no match is found within a certain time
@@ -68,7 +72,7 @@ io.on("connection", (socket) => {
       io.to(socket.id).emit("matchTimeout", {
         message: "Matchmaking timed out. Please try again.",
       });
-      log(`Player left queue: ${username}`);
+      console.log(`Player left queue: ${username}`);
     }, 30000);
 
     matchTimeouts.set(socket.id, timeoutId);
@@ -77,7 +81,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    log(`Client disconnected: ${socket.id}`);
+    console.log(`Client disconnected: ${socket.id}`);
 
     // Remove player from queue if they were waiting
     matchmakingQueue = matchmakingQueue.filter(

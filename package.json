@@ -1,34 +1,18 @@
 {
-  "private": true,
+  "name": "dsa-battle-mono",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
-    "build": "turbo run build",
-    "clean": "turbo run clean",
-    "dev": "turbo run dev",
-    "lint": "biome lint --write .",
-    "lint:fix": "biome check --write --unsafe .",
-    "lint:staged": "biome check --error-on-warnings --no-errors-on-unmatched --staged .",
-    "format": "biome check --write .",
-    "db:generate": "bun --filter=@repo/db db:generate",
-    "db:migrate": "bun --filter=@repo/db db:migrate",
-    "db:studio": "bun --filter=@repo/db db:studio",
-    "test": "turbo run test",
-    "typecheck": "turbo run typecheck",
-    "prepare": "husky"
+    "dev:web": "pnpm dlx nx dev web",
+    "dev:server":"pnpm dlx nx dev server",
+    "dev":"pnpm dlx nx run-many --target=dev --all",
+    "build:ui": "pnpm dlx nx build @dsa-battle/shared-ui",
+    "build:all": "pnpm dlx nx run-many --target=build --all"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
-    "supabase": "^1.191.3",
-    "turbo": "^2.1.1"
-  },
-  "lint-staged": {
-    "*": ["biome check --no-errors-on-unmatched --files-ignore-unknown=true"]
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "name": "kitchen-sink",
-  "packageManager": "bun@1.1.26",
-  "workspaces": ["apps/*", "packages/*"]
+    "nx": "19.7.3"
+  }
 }

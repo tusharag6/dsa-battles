@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import "@repo/ui/main.css";
+import "./index.css";
 import {
   Route,
   RouterProvider,
@@ -20,8 +20,8 @@ const router = createBrowserRouter(
       <Route path="/match" element={<Matchmaking />} />
       <Route path="/match/:matchId" element={<Match />} />
       <Route path="/result" element={<Result />} />
-    </Route>,
-  ),
+    </Route>
+  )
 );
 
 const el = document.getElementById("root");
