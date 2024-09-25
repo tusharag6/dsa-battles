@@ -17,7 +17,7 @@ const customTheme: monaco.editor.IStandaloneThemeData = {
   inherit: true,
   rules: [{ token: "", foreground: "b5e8ff" }],
   colors: {
-    "editor.background": "#010d1a",
+    "editor.background": "#001f3d",
     "editor.foreground": "#b5e8ff",
     "editorCursor.foreground": "#b5e8ff",
     "editor.lineHighlightBackground": "#021b34",
@@ -38,7 +38,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor | null>(
-    null,
+    null
   );
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP,
         () => {
           // Do nothing
-        },
+        }
       );
 
       // Clean up
