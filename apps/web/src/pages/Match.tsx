@@ -139,7 +139,7 @@ export default function Match() {
               </Card>
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={20}>
+            <ResizablePanel defaultSize={20} maxSize={30} minSize={5}>
               <Tabs defaultValue="tests" className="p-0 m-0">
                 <TabsList className="w-full rounded-none m-0 p-0">
                   <TabsTrigger

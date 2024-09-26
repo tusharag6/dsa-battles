@@ -15,7 +15,7 @@ This project is a competitive coding platform where users can engage in 1v1 matc
 
 - [x] **Basic Matchmaking System**: A basic system for matching users for coding battles has been implemented.
 - [ ] **Create Problem Repository with Different Levels**: Set up a repository that categorizes problems by difficulty level.
-- [ ] **Code Editor and Problem Display**: Implement an in-browser code editor with problem descriptions for live coding.
+- [x] **Code Editor and Problem Display**: Implement an in-browser code editor with problem descriptions for live coding.
 - [ ] **Timer for Tracking the Duration of Matches**: Add a timer to keep track of match duration and display it to users.
 - [ ] **Code Execution Environment**: Set up a secure environment to compile and execute user-submitted code for battles.
 - [ ] **User Authentication**
@@ -54,11 +54,7 @@ This project is a competitive coding platform where users can engage in 1v1 matc
    pnpm install
    ```
 
-3. **Run the frontend**:
+3. **Run the project**:
    ```bash
-   pnpm run dev:web
-   ```
-4. **Run the backend**:
-   ```bash
-   pnpm run dev:server
+   pnpm dev
    ```
