@@ -50,7 +50,7 @@ services:
       - redis
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=$${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=redis://:$${REDIS_PASSWORD}@redis:6379
     networks:
       - app-network

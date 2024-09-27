@@ -82,59 +82,6 @@ async function matchPlayer() {
   }
 }
 
-async function submitCode(
-  submission: CodeSubmission
-): Promise<SubmissionResult> {
-  try {
-    console.log("SUBMISSION: ", submission);
-
-    const response = await axios.post("http://localhost:2358/submissions", {
-      source_code: submission.source_code,
-      language_id: submission.language_id,
-      stdin: "",
-    });
-
-    console.log("RESPONSE: ", response);
-
-    const { token } = response.data;
-
-    console.log("TOKEN: ", token);
-
-    const statusResponse = await axios.get(
-      `${JUDGE0_API}/submissions/${token}?wait=true`
-    );
-    console.log("STATUS RESPONSE: ", statusResponse.data);
-    return statusResponse.data;
-  } catch (error) {
-    console.log(
-      "====================================================================="
-    );
-    console.error("Error submitting code:", error);
-    console.log(
-      "====================================================================="
-    );
-
-    throw error;
-  }
-}
-async function saveSubmissionResult(
-  submission: CodeSubmission,
-  result: SubmissionResult
-) {
-  try {
-    await db.insert(submissionsTable).values({
-      source_code: submission.source_code,
-      status: "",
-      execution_time: parseFloat(result.time),
-      memory_usage: result.memory,
-      language_id: submission.language_id,
-      problem_id: submission.problem_id,
-    });
-  } catch (error) {
-    console.error("Error saving submission result:", error);
-  }
-}
-
 io.on("connection", (socket) => {
   console.log("Client connected", socket.id);
 
@@ -156,18 +103,6 @@ io.on("connection", (socket) => {
     matchTimeouts.set(socket.id, timeoutId);
 
     matchPlayer();
-  });
-
-  socket.on("codeSubmission", async (submission: CodeSubmission) => {
-    try {
-      console.log("submission: ", submission);
-      const result = await submitCode(submission);
-      socket.emit("submissionResult", result);
-
-      await saveSubmissionResult(submission, result);
-    } catch (error) {
-      socket.emit("error", "Error processing your submission");
-    }
   });
 
   socket.on("disconnect", () => {
@@ -223,6 +158,33 @@ app.get("/api/problems/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching problem details:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// this return token which can be used to get the submission status
+// initially the submission status will be : "IN QUEUE"
+// TODO: do something to get the result of the submission
+app.post("/api/submit", async (req, res) => {
+  const submission = req.body;
+
+  try {
+    console.log("SUBMISSION: ", submission);
+
+    const response = await axios.post(`${JUDGE0_API}/submissions`, {
+      source_code: submission.sourceCode,
+      language_id: 63,
+      stdin: "",
+    });
+
+    const { token } = response.data;
+
+    res.send({
+      token,
+      message: "Submission received. Please wait for the results.",
+    });
+  } catch (error) {
+    console.error("Error submitting code:", error);
+    throw error;
   }
 });
 

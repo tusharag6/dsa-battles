@@ -1,5 +1,5 @@
 {
-  "id": "3b34eced-4331-45a1-9f8d-1d6336ab771d",
+  "id": "2bd42371-8be8-43db-b851-8ebcad3a5397",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -150,38 +150,44 @@
           "primaryKey": true,
           "notNull": true
         },
-        "problem_id": {
-          "name": "problem_id",
-          "type": "serial",
+        "source_code": {
+          "name": "source_code",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "language_id": {
           "name": "language_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "source_code": {
-          "name": "source_code",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "execution_time": {
-          "name": "execution_time",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "memory_usage": {
-          "name": "memory_usage",
+        "problem_id": {
+          "name": "problem_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stdin": {
+          "name": "stdin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expected_output": {
+          "name": "expected_output",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stdout": {
+          "name": "stdout",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_id": {
+          "name": "status_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -190,39 +196,167 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time": {
+          "name": "time",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "memory": {
+          "name": "memory",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stderr": {
+          "name": "stderr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token": {
+          "name": "token",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "number_of_runs": {
+          "name": "number_of_runs",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cpu_time_limit": {
+          "name": "cpu_time_limit",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cpu_extra_time": {
+          "name": "cpu_extra_time",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wall_time_limit": {
+          "name": "wall_time_limit",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "memory_limit": {
+          "name": "memory_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stack_limit": {
+          "name": "stack_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_processes_and_or_threads": {
+          "name": "max_processes_and_or_threads",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enable_per_process_and_thread_time_limit": {
+          "name": "enable_per_process_and_thread_time_limit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enable_per_process_and_thread_memory_limit": {
+          "name": "enable_per_process_and_thread_memory_limit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_file_size": {
+          "name": "max_file_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compile_output": {
+          "name": "compile_output",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "exit_code": {
+          "name": "exit_code",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "exit_signal": {
+          "name": "exit_signal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wall_time": {
+          "name": "wall_time",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compiler_options": {
+          "name": "compiler_options",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "command_line_arguments": {
+          "name": "command_line_arguments",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "redirect_stderr_to_stdout": {
+          "name": "redirect_stderr_to_stdout",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "callback_url": {
+          "name": "callback_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "additional_files": {
+          "name": "additional_files",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enable_network": {
+          "name": "enable_network",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "submissions_problem_id_problems_id_fk": {
-          "name": "submissions_problem_id_problems_id_fk",
-          "tableFrom": "submissions",
-          "tableTo": "problems",
-          "columnsFrom": [
-            "problem_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "submissions_language_id_languages_id_fk": {
-          "name": "submissions_language_id_languages_id_fk",
-          "tableFrom": "submissions",
-          "tableTo": "languages",
-          "columnsFrom": [
-            "language_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

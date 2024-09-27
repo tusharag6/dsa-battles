@@ -18,7 +18,6 @@ import MonacoEditor from "../components/MonacoEditor";
 import { Button } from "@/components/ui/button";
 import { Maximize, RotateCcw } from "lucide-react";
 import MatchConsole from "@/components/MatchConsole";
-import { io } from "socket.io-client";
 import axios from "axios";
 
 interface Problem {
@@ -48,7 +47,7 @@ interface SubmissionResult {
 }
 
 const API_URL = "http://localhost:5001";
-const socket = io("http://localhost:5001");
+// const socket = io("http://localhost:5001");
 
 export default function Match() {
   const [language, setLanguage] = useState("javascript");
@@ -59,18 +58,6 @@ export default function Match() {
 
   useEffect(() => {
     fetchProblem();
-
-    socket.on("submissionResult", (data: SubmissionResult) => {
-      setResult(data);
-    });
-
-    socket.on("error", (error: string) => {
-      console.error("Socket error: ", error);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   const fetchProblem = async () => {
@@ -90,23 +77,17 @@ export default function Match() {
     console.log("Running test cases...");
   };
 
-  const handleSubmit = () => {
-    // Logic to submit the problem
-    console.log("Code: ", code);
-    console.log("Submitting solution...");
-    if (socket) {
-      socket.emit("codeSubmission", {
-        source_code: code,
-        language_id: 63, //javascript
-        stdin: "",
-        expected_output: "",
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/api/submit`, {
+        sourceCode: code,
+        languageId: language,
       });
-    } else {
-      console.error("Socket is not connected");
+      console.log("SUBMISSION RESPONSE: ", response.data);
+    } catch (error) {
+      console.error("ERROR SUBMITING CODE: ", error);
     }
   };
-
-  console.log("Result: ", result);
 
   return (
     <div className="flex flex-col h-screen">
