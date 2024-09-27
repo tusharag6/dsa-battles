@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/index";
 import { matchesTable } from "../db/schema";
 export type Match = {
-  id: string;
+  id: number;
   player1: string;
   player2: string;
   startTime: Date;
@@ -48,7 +48,7 @@ export async function createMatch(
  * @param matchId The ID of the match to end.
  * @returns The updated match, or null if the match could not be found.
  */
-export async function endMatch(matchId: string): Promise<Match | null> {
+export async function endMatch(matchId: number): Promise<Match | null> {
   if (!matchId) {
     throw new Error("Match ID cannot be null or empty");
   }

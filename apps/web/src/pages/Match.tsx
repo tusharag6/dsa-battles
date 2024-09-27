@@ -12,15 +12,78 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MatchHeader from "../components/MatchHeader";
 import MonacoEditor from "../components/MonacoEditor";
 import { Button } from "@/components/ui/button";
 import { Maximize, RotateCcw } from "lucide-react";
 import MatchConsole from "@/components/MatchConsole";
+import { io } from "socket.io-client";
+import axios from "axios";
+
+interface Problem {
+  id: number;
+  title: string;
+  description: string;
+  difficulty: string;
+}
+
+interface TestCase {
+  id: number;
+  input: string;
+  expected_output: string;
+  is_hidden: boolean;
+}
+
+interface SubmissionResult {
+  stdout: string;
+  stderr: string;
+  status: {
+    id: number;
+    description: string;
+  };
+  compile_output: string;
+  time: string;
+  memory: number;
+}
+
+const API_URL = "http://localhost:5001";
+const socket = io("http://localhost:5001");
 
 export default function Match() {
   const [language, setLanguage] = useState("javascript");
+  const [problem, setProblem] = useState<Problem | null>(null);
+  const [testCases, setTestCases] = useState<TestCase[]>([]);
+  const [code, setCode] = useState<string>("");
+  const [result, setResult] = useState<SubmissionResult | null>(null);
+
+  useEffect(() => {
+    fetchProblem();
+
+    socket.on("submissionResult", (data: SubmissionResult) => {
+      setResult(data);
+    });
+
+    socket.on("error", (error: string) => {
+      console.error("Socket error: ", error);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const fetchProblem = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/problems/1`);
+      const { problem, testCases } = response.data;
+      console.log("Problem: ", problem);
+      setProblem(problem[0]);
+      setTestCases(testCases);
+    } catch (error) {
+      console.error("Error fetching problem: ", error);
+    }
+  };
 
   const handleRun = () => {
     // Logic to run test cases
@@ -29,8 +92,21 @@ export default function Match() {
 
   const handleSubmit = () => {
     // Logic to submit the problem
+    console.log("Code: ", code);
     console.log("Submitting solution...");
+    if (socket) {
+      socket.emit("codeSubmission", {
+        source_code: code,
+        language_id: 63, //javascript
+        stdin: "",
+        expected_output: "",
+      });
+    } else {
+      console.error("Socket is not connected");
+    }
   };
+
+  console.log("Result: ", result);
 
   return (
     <div className="flex flex-col h-screen">
@@ -50,40 +126,19 @@ export default function Match() {
                 </TabsList>
                 <TabsContent value="description" className="p-4 overflow-auto">
                   <CardHeader className="px-0">
-                    <CardTitle>Two Sum</CardTitle>
+                    <CardTitle>{problem?.title || "Loading..."}</CardTitle>
                   </CardHeader>
                   <div className="space-y-6">
                     <div>
                       <p className="text-muted-foreground">
-                        Given an array of integers, find the maximum sum of
-                        non-adjacent elements. For example, if the input is [2,
-                        4, 1, 5, 3, 5], the maximum sum of non-adjacent elements
-                        is 12 (4 + 5 + 3).
+                        {problem?.description || "Loading description..."}
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold">Input/Output</h3>
-                      <div className="mt-2 grid grid-cols-2 gap-4">
-                        <div>
-                          <div className="font-medium">Input:</div>
-                          <div className="text-muted-foreground">
-                            An array of integers
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-medium">Output:</div>
-                          <div className="text-muted-foreground">
-                            The maximum sum of non-adjacent elements
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">Constraints</h3>
-                      <ul className="mt-2 list-disc pl-6 space-y-2 text-muted-foreground">
-                        <li>1 ≤ array length ≤ 10^6</li>
-                        <li>0 ≤ array elements ≤ 10^4</li>
-                      </ul>
+                      <h3 className="text-xl font-bold">Difficulty</h3>
+                      <p className="text-muted-foreground">
+                        {problem?.difficulty || "Loading difficulty..."}
+                      </p>
                     </div>
                   </div>
                 </TabsContent>
@@ -132,7 +187,7 @@ export default function Match() {
                       </div>
                     </div>
                     <div className="flex-grow overflow-hidden">
-                      <MonacoEditor language={language} />
+                      <MonacoEditor setCode={setCode} language={language} />
                     </div>
                   </div>
                 </CardContent>
@@ -156,7 +211,10 @@ export default function Match() {
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="tests">
-                  <MatchConsole />
+                  <MatchConsole
+                    testCases={testCases}
+                    setTestCases={setTestCases}
+                  />
                 </TabsContent>
                 <TabsContent value="output">
                   <Card className="h-full rounded-none border-0">

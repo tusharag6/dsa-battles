@@ -1,40 +1,62 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface TestCase {
   id: number;
   input: string;
+  expected_output: string;
+  is_hidden: boolean;
 }
 
-export default function MatchConsole() {
-  const [testCases, setTestCases] = useState<TestCase[]>([
-    { id: 1, input: "[10,2]" },
-    { id: 2, input: "[3,4,5]" },
-  ]);
+export interface MatchConsoleProps {
+  testCases: TestCase[];
+  setTestCases: React.Dispatch<React.SetStateAction<TestCase[]>>;
+}
+
+export default function MatchConsole({
+  testCases,
+  setTestCases,
+}: MatchConsoleProps) {
+  const [testCasesState, setTestCasesState] = useState<TestCase[]>([]);
   const [selectedCase, setSelectedCase] = useState<number>(1);
   const [newCaseInput, setNewCaseInput] = useState<string>("");
+
+  useEffect(() => {
+    setTestCasesState(testCases);
+  }, [testCases]);
 
   const addNewCase = () => {
     if (newCaseInput.trim() !== "") {
       const newId = Math.max(...testCases.map((tc) => tc.id), 0) + 1;
-      setTestCases([...testCases, { id: newId, input: newCaseInput }]);
+      const newTestCases = [
+        ...testCasesState,
+        {
+          id: newId,
+          input: newCaseInput,
+          expected_output: "",
+          is_hidden: false,
+        },
+      ];
+      setTestCasesState(newTestCases);
+      setTestCases(newTestCases);
       setSelectedCase(newId);
       setNewCaseInput("");
     }
   };
-
   const updateTestCase = (input: string) => {
-    setTestCases(
-      testCases.map((tc) => (tc.id === selectedCase ? { ...tc, input } : tc))
+    const updatedTestCases = testCasesState.map((tc) =>
+      tc.id === selectedCase ? { ...tc, input } : tc
     );
+    setTestCasesState(updatedTestCases);
+    setTestCases(updatedTestCases);
   };
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
       <div className="flex items-center p-2 space-x-2 overflow-x-auto">
-        {testCases.map((testCase) => (
+        {testCasesState.map((testCase) => (
           <Button
             key={testCase.id}
             variant={selectedCase === testCase.id ? "default" : "ghost"}
@@ -73,7 +95,9 @@ export default function MatchConsole() {
         ) : (
           <Input
             type="text"
-            value={testCases.find((tc) => tc.id === selectedCase)?.input || ""}
+            value={
+              testCasesState.find((tc) => tc.id === selectedCase)?.input || ""
+            }
             onChange={(e) => updateTestCase(e.target.value)}
             className="w-full bg-secondary text-secondary-foreground"
           />

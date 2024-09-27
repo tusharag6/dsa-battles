@@ -58,3 +58,24 @@ This project is a competitive coding platform where users can engage in 1v1 matc
    ```bash
    pnpm dev
    ```
+
+# seed
+
+`
+INSERT INTO problems (title, description, difficulty) VALUES
+('Two Sum', 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.', 'Easy'),
+('Add Two Numbers', 'You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.', 'Medium'),
+('Longest Substring Without Repeating Characters', 'Given a string s, find the length of the longest substring without repeating characters.', 'Medium');
+
+-- Insert sample test cases
+INSERT INTO test_cases (problem_id, input, expected_output, is_hidden) VALUES
+(1, '[2,7,11,15]\n9', '[0,1]', false),
+(1, '[3,2,4]\n6', '[1,2]', false),
+(1, '[3,3]\n6', '[0,1]', true),
+(2, '[2,4,3]\n[5,6,4]', '[7,0,8]', false),
+(2, '[0]\n[0]', '[0]', false),
+(2, '[9,9,9,9,9,9,9]\n[9,9,9,9]', '[8,9,9,9,0,0,0,1]', true),
+(3, 'abcabcbb', '3', false),
+(3, 'bbbbb', '1', false),
+(3, 'pwwkew', '3', true);
+`

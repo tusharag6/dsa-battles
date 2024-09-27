@@ -30,11 +30,13 @@ const customTheme: monaco.editor.IStandaloneThemeData = {
 interface MonacoEditorProps {
   language?: string;
   initialCode?: string;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const MonacoEditor: React.FC<MonacoEditorProps> = ({
   language = "javascript",
   initialCode = "// Your code here",
+  setCode,
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor | null>(
@@ -78,6 +80,15 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
           // Do nothing
         }
       );
+
+      // Add a listener to update setCode on content change
+      const model = editorInstance.current.getModel();
+      if (model) {
+        editorInstance.current.onDidChangeModelContent(() => {
+          const updatedCode = model.getValue();
+          setCode(updatedCode);
+        });
+      }
 
       // Clean up
       return () => {
