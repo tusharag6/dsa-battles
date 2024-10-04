@@ -16,7 +16,7 @@ app
   .use(express.json())
   .use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }))
   .get("/message/:name", (req, res) =>
-    res.json({ message: `Hello ${req.params.name}` })
+    res.json({ message: `Hello ${req.params.name}` }),
   )
   .get("/status", (_, res) => res.json({ ok: true }));
 
@@ -92,7 +92,7 @@ io.on("connection", (socket) => {
     // Add a timeout to remove a user from the queue if no match is found within a certain time
     const timeoutId = setTimeout(() => {
       matchmakingQueue = matchmakingQueue.filter(
-        (player) => player.socketId !== socket.id
+        (player) => player.socketId !== socket.id,
       );
       io.to(socket.id).emit("matchTimeout", {
         message: "Matchmaking timed out. Please try again.",
@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
 
     // Remove player from queue if they were waiting
     matchmakingQueue = matchmakingQueue.filter(
-      (player) => player.socketId !== socket.id
+      (player) => player.socketId !== socket.id,
     );
 
     // clear any matchmaking timeouts for disconnected player
@@ -185,6 +185,88 @@ app.post("/api/submit", async (req, res) => {
   } catch (error) {
     console.error("Error submitting code:", error);
     throw error;
+  }
+});
+
+app.get("/api/check", async (req, res) => {
+  try {
+    const submissionToken = req.headers["submission-token"];
+
+    console.log(submissionToken);
+    console.log(JSON.stringify(req.headers));
+
+    if (!submissionToken) {
+      return res.status(401).json({ message: "submission token missing" });
+    }
+
+    const response = await axios.get(
+      `${JUDGE0_API}/submissions/${submissionToken}`,
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.log("Error checking code:", error);
+    res.status(500).json({
+      message: "An error occurred while checking the submission",
+      error: error,
+    });
+  }
+});
+
+async function getProblem(problemId: number) {
+  try {
+    const problem = await db
+      .select()
+      .from(problemsTable)
+      .where(eq(problemsTable.id, problemId));
+
+    const testCases = await db
+      .select()
+      .from(testCasesTable)
+      .where(eq(testCasesTable.problem_id, problemId));
+
+    if (problem.length === 0) {
+      throw new Error("Problem not found");
+    }
+
+    return { problem: problem[0], testCases };
+  } catch (error) {
+    console.error("Error fetching problem details:", error);
+    throw error;
+  }
+}
+
+app.post("/api/submit/bulk", async (req, res) => {
+  const { language_id, problem_id, source_code } = req.body;
+
+  if (!language_id || !problem_id || !source_code) {
+    return res.status(400).json({
+      message: "language_id, problem_id, and source_code are required",
+    });
+  }
+
+  try {
+    const { testCases } = await getProblem(problem_id);
+
+    const submissions = testCases.map((testCase) => ({
+      language_id: 52,
+      source_code,
+      stdin: testCase.input,
+      expected_output: testCase.expected_output,
+    }));
+
+    const response = await axios.post(`${JUDGE0_API}/submissions/batch`, {
+      submissions,
+    });
+
+    console.log("BULK SUBMIT RESPONSE: ", response.data);
+
+    res.status(200).json({
+      message: "Submission received. Please wait for the results.",
+      tokens: response.data,
+    });
+  } catch (error) {
+    console.error("Error submitting code:", error);
+    res.status(500).json({ message: "Error submitting code" });
   }
 });
 

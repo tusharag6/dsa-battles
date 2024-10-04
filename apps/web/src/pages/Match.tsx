@@ -62,7 +62,7 @@ export default function Match() {
 
   const fetchProblem = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/problems/1`);
+      const response = await axios.get(`${API_URL}/api/problems/2`);
       const { problem, testCases } = response.data;
       console.log("Problem: ", problem);
       setProblem(problem[0]);
@@ -79,13 +79,60 @@ export default function Match() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`${API_URL}/api/submit`, {
-        sourceCode: code,
-        languageId: language,
+      // TODO: send custom test cases
+      const response = await axios.post(`${API_URL}/api/submit/bulk`, {
+        source_code: code,
+        language_id: language,
+        problem_id: 2,
       });
+
       console.log("SUBMISSION RESPONSE: ", response.data);
+
+      const submissionTokens = response.data.tokens;
+
+      if (!Array.isArray(submissionTokens)) {
+        console.error("Expected submissionTokens to be an array");
+        return;
+      }
+
+      submissionTokens.forEach((t) => {
+        let isPolling = false; // Flag to prevent overlap
+
+        const intervalId = setInterval(async () => {
+          if (isPolling) return; // If a request is already in progress, skip
+
+          isPolling = true; // Mark as in progress
+          try {
+            const checkResponse = await axios.get(`${API_URL}/api/check`, {
+              headers: {
+                "submission-token": t.token,
+              },
+            });
+
+            console.log("CHECKING RESULT: ", checkResponse.data);
+
+            const { status } = checkResponse.data;
+
+            if (status.id === 3 || status.id === 4) {
+              // 3 (Accepted), 4 (Wrong Answer)
+              console.log("Final result received, stopping polling");
+              clearInterval(intervalId);
+            }
+          } catch (error) {
+            console.error("ERROR CHECKING CODE: ", error);
+            clearInterval(intervalId);
+          } finally {
+            isPolling = false;
+          }
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(intervalId);
+          console.log("Interval stopped after 10 seconds");
+        }, 10000);
+      });
     } catch (error) {
-      console.error("ERROR SUBMITING CODE: ", error);
+      console.error("ERROR SUBMITTING CODE: ", error);
     }
   };
 
