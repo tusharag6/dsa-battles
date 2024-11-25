@@ -16,7 +16,7 @@ app
   .use(express.json())
   .use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }))
   .get("/message/:name", (req, res) =>
-    res.json({ message: `Hello ${req.params.name}` }),
+    res.json({ message: `Hello ${req.params.name}` })
   )
   .get("/status", (_, res) => res.json({ ok: true }));
 
@@ -92,7 +92,7 @@ io.on("connection", (socket) => {
     // Add a timeout to remove a user from the queue if no match is found within a certain time
     const timeoutId = setTimeout(() => {
       matchmakingQueue = matchmakingQueue.filter(
-        (player) => player.socketId !== socket.id,
+        (player) => player.socketId !== socket.id
       );
       io.to(socket.id).emit("matchTimeout", {
         message: "Matchmaking timed out. Please try again.",
@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
 
     // Remove player from queue if they were waiting
     matchmakingQueue = matchmakingQueue.filter(
-      (player) => player.socketId !== socket.id,
+      (player) => player.socketId !== socket.id
     );
 
     // clear any matchmaking timeouts for disconnected player
@@ -200,8 +200,9 @@ app.get("/api/check", async (req, res) => {
     }
 
     const response = await axios.get(
-      `${JUDGE0_API}/submissions/${submissionToken}`,
+      `${JUDGE0_API}/submissions/${submissionToken}`
     );
+
     res.json(response.data);
   } catch (error) {
     console.log("Error checking code:", error);
@@ -238,6 +239,8 @@ async function getProblem(problemId: number) {
 app.post("/api/submit/bulk", async (req, res) => {
   const { language_id, problem_id, source_code } = req.body;
 
+  console.log("BULK SUBMIT: ", req.body);
+
   if (!language_id || !problem_id || !source_code) {
     return res.status(400).json({
       message: "language_id, problem_id, and source_code are required",
@@ -254,6 +257,14 @@ app.post("/api/submit/bulk", async (req, res) => {
       expected_output: testCase.expected_output,
     }));
 
+    console.log(
+      "------------------------------------------------------------------"
+    );
+    console.log("SUBMISSIONS: ", submissions);
+    console.log(
+      "------------------------------------------------------------------"
+    );
+
     const response = await axios.post(`${JUDGE0_API}/submissions/batch`, {
       submissions,
     });
@@ -265,7 +276,7 @@ app.post("/api/submit/bulk", async (req, res) => {
       tokens: response.data,
     });
   } catch (error) {
-    console.error("Error submitting code:", error);
+    console.error("Error submitting code (bulk submit):", error);
     res.status(500).json({ message: "Error submitting code" });
   }
 });

@@ -8,16 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Activity, Clock, Play, Send, ShieldOff, Trophy } from "lucide-react";
+import { Activity, Clock, Play, Send, Trophy } from "lucide-react";
 import React, { useState } from "react";
 
 type MatchHeaderProps = {
@@ -27,35 +18,41 @@ type MatchHeaderProps = {
 
 export default function MatchHeader({ onRun, onSubmit }: MatchHeaderProps) {
   const [opponentStatusOpen, setOpponentStatusOpen] = useState(false);
-  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+  // const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between bg-primary text-primary-foreground p-4">
-      <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between bg-background text-card-foreground px-4 pt-2">
+      <div className="flex items-center gap-2 border p-1 px-4 rounded-sm bg-secondary">
         <Clock className="w-5 h-5" />
         <div className="font-bold text-lg">12:34</div>
       </div>
 
-      <div>
-        <Button variant="outline" size="sm" className="ml-4" onClick={onRun}>
+      <div className="flex gap-px">
+        <Button
+          variant={"secondary"}
+          className="rounded-l-sm rounded-r-none"
+          onClick={onRun}
+        >
           <Play className="w-4 h-4 mr-2" />
           Run
         </Button>
 
-        <Button variant="outline" size="sm" onClick={onSubmit}>
-          <Send className="w-4 h-4 mr-2" />
-          Submit
-        </Button>
-      </div>
-
-      <div className="flex items-center gap-4">
         <Button
-          variant="ghost"
+          onClick={onSubmit}
+          variant={"secondary"}
+          className="rounded-r-sm rounded-l-none"
+        >
+          <Send className="w-4 h-4 mr-2 text-primary" />
+          <span className="text-primary">Submit</span>
+        </Button>
+
+        <Button
+          variant={"secondary"}
           size="icon"
-          className="text-primary-foreground hover:bg-primary/20"
+          className="text-card-foreground rounded-sm ml-1"
           onClick={() => setOpponentStatusOpen(true)}
         >
-          <ShieldOff className="w-5 h-5" />
+          <Trophy className="w-5 h-5" />
           <span className="sr-only">Opponent Status</span>
         </Button>
 
@@ -99,10 +96,10 @@ export default function MatchHeader({ onRun, onSubmit }: MatchHeaderProps) {
           </DialogContent>
         </Dialog>
 
-        <Button
-          variant="ghost"
+        {/* <Button
+          variant={"secondary"}
           size="icon"
-          className="text-primary-foreground hover:bg-primary/20"
+          className="text-card-foreground"
           onClick={() => setLeaderboardOpen(true)}
         >
           <Trophy className="w-5 h-5" />
@@ -186,9 +183,11 @@ export default function MatchHeader({ onRun, onSubmit }: MatchHeaderProps) {
               </TableBody>
             </Table>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
+      </div>
 
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4 border p-1 px-4 rounded-sm bg-secondary">
           <Activity className="w-5 h-5" />
           <div className="font-bold text-lg">120 / 200</div>
         </div>

@@ -25,6 +25,9 @@ export default function MatchConsole({
 
   useEffect(() => {
     setTestCasesState(testCases);
+    if (testCases.length > 0) {
+      setSelectedCase(1);
+    }
   }, [testCases]);
 
   const addNewCase = () => {
@@ -41,29 +44,30 @@ export default function MatchConsole({
       ];
       setTestCasesState(newTestCases);
       setTestCases(newTestCases);
-      setSelectedCase(newId);
+      setSelectedCase(newTestCases.length);
       setNewCaseInput("");
     }
   };
+
   const updateTestCase = (input: string) => {
     const updatedTestCases = testCasesState.map((tc) =>
-      tc.id === selectedCase ? { ...tc, input } : tc
+      tc.id === testCasesState[selectedCase - 1].id ? { ...tc, input } : tc
     );
     setTestCasesState(updatedTestCases);
     setTestCases(updatedTestCases);
   };
 
   return (
-    <div className="w-full h-full bg-background flex flex-col">
+    <div className="w-full h-full bg-card flex flex-col">
       <div className="flex items-center p-2 space-x-2 overflow-x-auto">
-        {testCasesState.map((testCase) => (
+        {testCasesState.map((testCase, index) => (
           <Button
             key={testCase.id}
-            variant={selectedCase === testCase.id ? "default" : "ghost"}
+            variant={selectedCase === index + 1 ? "secondary" : "ghost"}
             size="sm"
-            onClick={() => setSelectedCase(testCase.id)}
+            onClick={() => setSelectedCase(index + 1)}
           >
-            Case {testCase.id}
+            Case {index + 1}
           </Button>
         ))}
         <Button
@@ -75,6 +79,7 @@ export default function MatchConsole({
           }}
         >
           <PlusIcon className="w-4 h-4" />
+          <span className="sr-only">Add new test case</span>
         </Button>
       </div>
       <div className="p-4 space-y-2 flex-grow">
@@ -95,9 +100,7 @@ export default function MatchConsole({
         ) : (
           <Input
             type="text"
-            value={
-              testCasesState.find((tc) => tc.id === selectedCase)?.input || ""
-            }
+            value={testCasesState[selectedCase - 1]?.input || ""}
             onChange={(e) => updateTestCase(e.target.value)}
             className="w-full bg-secondary text-secondary-foreground"
           />

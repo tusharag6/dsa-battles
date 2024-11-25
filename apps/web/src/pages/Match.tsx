@@ -47,7 +47,6 @@ interface SubmissionResult {
 }
 
 const API_URL = "http://localhost:5001";
-// const socket = io("http://localhost:5001");
 
 export default function Match() {
   const [language, setLanguage] = useState("javascript");
@@ -62,7 +61,7 @@ export default function Match() {
 
   const fetchProblem = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/problems/2`);
+      const response = await axios.get(`${API_URL}/api/problems/4`);
       const { problem, testCases } = response.data;
       console.log("Problem: ", problem);
       setProblem(problem[0]);
@@ -73,17 +72,15 @@ export default function Match() {
   };
 
   const handleRun = () => {
-    // Logic to run test cases
     console.log("Running test cases...");
   };
 
   const handleSubmit = async () => {
     try {
-      // TODO: send custom test cases
       const response = await axios.post(`${API_URL}/api/submit/bulk`, {
         source_code: code,
         language_id: language,
-        problem_id: 2,
+        problem_id: 4,
       });
 
       console.log("SUBMISSION RESPONSE: ", response.data);
@@ -96,12 +93,12 @@ export default function Match() {
       }
 
       submissionTokens.forEach((t) => {
-        let isPolling = false; // Flag to prevent overlap
+        let isPolling = false;
 
         const intervalId = setInterval(async () => {
-          if (isPolling) return; // If a request is already in progress, skip
+          if (isPolling) return;
 
-          isPolling = true; // Mark as in progress
+          isPolling = true;
           try {
             const checkResponse = await axios.get(`${API_URL}/api/check`, {
               headers: {
@@ -114,7 +111,6 @@ export default function Match() {
             const { status } = checkResponse.data;
 
             if (status.id === 3 || status.id === 4) {
-              // 3 (Accepted), 4 (Wrong Answer)
               console.log("Final result received, stopping polling");
               clearInterval(intervalId);
             }
@@ -136,19 +132,34 @@ export default function Match() {
     }
   };
 
+  // TODO: Add border on focus for selected panel
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-background text-foreground">
       <MatchHeader onRun={handleRun} onSubmit={handleSubmit} />
-      <ResizablePanelGroup direction="horizontal" className="flex-grow">
-        <ResizablePanel defaultSize={50} minSize={30}>
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="flex-grow gap-1 p-4 pt-2"
+      >
+        <ResizablePanel
+          defaultSize={50}
+          minSize={30}
+          className="rounded-xl"
+          tabIndex={0}
+        >
           <Card className="h-full rounded-none border-0">
             <CardContent className="h-full p-0">
               <Tabs defaultValue="description" className="h-full">
-                <TabsList className="w-full justify-start rounded-none border-b p-0">
-                  <TabsTrigger value="description" className="rounded-none p-2">
+                <TabsList className="w-full justify-start rounded-none border-b bg-secondary border-border py-6">
+                  <TabsTrigger
+                    value="description"
+                    className="rounded-none p-2 data-[state=active]:bg-secondary"
+                  >
                     Description
                   </TabsTrigger>
-                  <TabsTrigger value="testcase" className="rounded-none p-2">
+                  <TabsTrigger
+                    value="testcase"
+                    className="rounded-none p-2 data-[state=active]:bg-secondary"
+                  >
                     Submission
                   </TabsTrigger>
                 </TabsList>
@@ -178,13 +189,13 @@ export default function Match() {
           </Card>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={50} minSize={30}>
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel defaultSize={80}>
-              <Card className="h-full rounded-none border-0">
+        <ResizablePanel defaultSize={50} minSize={30} className="rounded-xl">
+          <ResizablePanelGroup direction="vertical" className="gap-1">
+            <ResizablePanel defaultSize={70} className="rounded-xl">
+              <Card className="h-full rounded-none border-0 bg-card">
                 <CardContent className="h-full p-0">
                   <div className="h-full flex flex-col">
-                    <div className="flex justify-between items-center p-2 border-b">
+                    <div className="flex justify-between items-center p-[6.5px] border-r border-border bg-secondary">
                       <Select value={language} onValueChange={setLanguage}>
                         <SelectTrigger className="w-[180px] border-none">
                           <SelectValue placeholder="Select language" />
@@ -214,7 +225,7 @@ export default function Match() {
                         </Button>
                       </div>
                     </div>
-                    <div className="flex-grow overflow-hidden">
+                    <div className="flex-grow overflow-hidden bg-background">
                       <MonacoEditor setCode={setCode} language={language} />
                     </div>
                   </div>
@@ -222,29 +233,32 @@ export default function Match() {
               </Card>
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={20} maxSize={30} minSize={5}>
-              <Tabs defaultValue="tests" className="p-0 m-0">
-                <TabsList className="w-full rounded-none m-0 p-0">
+            <ResizablePanel defaultSize={30} className="rounded-xl">
+              <Tabs defaultValue="tests" className="h-full">
+                <TabsList className="w-full rounded-none m-0 p-0 bg-secondary">
                   <TabsTrigger
                     value="tests"
-                    className="flex-1 rounded-none p-2"
+                    className="flex-1 rounded-none p-2 data-[state=active]:bg-secondary border-0"
                   >
                     Tests
                   </TabsTrigger>
                   <TabsTrigger
                     value="output"
-                    className="flex-1 p-2 rounded-none"
+                    className="flex-1 p-2 rounded-none data-[state=active]:bg-secondary border-0"
                   >
                     Output
                   </TabsTrigger>
                 </TabsList>
-                <TabsContent value="tests">
+                <TabsContent value="tests" className="h-full m-0 overflow-auto">
                   <MatchConsole
                     testCases={testCases}
                     setTestCases={setTestCases}
                   />
                 </TabsContent>
-                <TabsContent value="output">
+                <TabsContent
+                  value="output"
+                  className="h-full m-0 overflow-auto"
+                >
                   <Card className="h-full rounded-none border-0">
                     <CardContent className="h-full p-4">
                       <p className="text-sm text-muted-foreground">

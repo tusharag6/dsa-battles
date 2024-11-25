@@ -17,13 +17,13 @@ const customTheme: monaco.editor.IStandaloneThemeData = {
   inherit: true,
   rules: [{ token: "", foreground: "b5e8ff" }],
   colors: {
-    "editor.background": "#001f3d",
-    "editor.foreground": "#b5e8ff",
-    "editorCursor.foreground": "#b5e8ff",
-    "editor.lineHighlightBackground": "#021b34",
-    "editorLineNumber.foreground": "#1a4666",
-    "editor.selectionBackground": "#0a4675",
-    "editor.inactiveSelectionBackground": "#314b5e",
+    "editor.background": "#000000",
+    "editor.foreground": "#000000",
+    "editorCursor.foreground": "#000000",
+    "editor.lineHighlightBackground": "#000000",
+    "editorLineNumber.foreground": "#000000",
+    "editor.selectionBackground": "#000000",
+    "editor.inactiveSelectionBackground": "#000000",
   },
 };
 
@@ -97,7 +97,22 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
     }
   }, [language, initialCode]);
 
-  return <div ref={editorRef} style={{ width: "100%", height: "100%" }} />;
+  useEffect(() => {
+    if (editorInstance.current) {
+      const editorElement = editorInstance.current.getDomNode();
+      if (editorElement) {
+        editorElement.style.outline = "none";
+      }
+    }
+  }, []);
+
+  return (
+    <div
+      ref={editorRef}
+      className="monaco-editor rounded-xl focus-visible:outline-none"
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 };
 
 export default MonacoEditor;

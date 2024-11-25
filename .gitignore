@@ -11,7 +11,9 @@ dist-ssr
 server/dist
 public/dist
 
-
-
 .nx/cache
 .nx/workspace-data
+
+problems
+
+
