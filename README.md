@@ -295,3 +295,18 @@ A surprise-based mode where rules, scoring, or problem types are revealed only a
 #### **Use Case**:
 
 Engages players who enjoy unpredictability and creative problem-solving.
+
+Here are five unique game mode ideas that can bring variety and excitement to your platform:
+
+1. Code Relay
+   Description: "Collaborative problem-solving in turns."
+   Features:
+   Teams of 2-4 players work on a single problem, taking turns to contribute.
+   Time limit per turn; incomplete solutions get passed to the next teammate.
+   Encourages teamwork and quick thinking.
+2. Debug Duel
+   Description: "Fix broken code faster than opponents."
+   Features:
+   Players are given buggy code and must fix it to pass predefined test cases.
+   Points awarded based on speed and accuracy.
+   Emphasizes debugging skills over problem-solving from scratch.
