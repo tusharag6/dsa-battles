@@ -46,7 +46,7 @@ export default function GameModes() {
             <div
               className="absolute inset-0 bg-cover bg-center grayscale"
               style={{
-                backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url(/src/assets/comingsoon.jpeg)`,
+                backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), url(/comingsoon.jpeg)`,
               }}
             />
             <div className="relative p-6 text-white">

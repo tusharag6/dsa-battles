@@ -15,7 +15,20 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-export default function GameModeDetails({ mode }) {
+type Mode = {
+  title: string;
+  description: string;
+  src: string;
+  features: string;
+  modes?: string[];
+  durations?: string[];
+};
+
+interface GameModeDetailsProps {
+  mode?: Mode | null;
+}
+
+export default function GameModeDetails({ mode }: GameModeDetailsProps) {
   if (!mode) return null;
 
   return (

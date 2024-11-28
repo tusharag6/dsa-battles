@@ -18,10 +18,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="/" element={<Home />} />
-      <Route path="/game-modes" element={<GameModes />} />
-      <Route path="/match" element={<Matchmaking />} />
-      <Route path="/match/:matchId" element={<Match />} />
-      <Route path="/result" element={<Result />} />
+      <Route path="/game/modes" element={<GameModes />} />
+      <Route path="/game/matchmaking" element={<Matchmaking />} />
+      <Route path="/game/match/:matchId" element={<Match />} />
+      <Route path="/game/result" element={<Result />} />
     </Route>
   )
 );
