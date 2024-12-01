@@ -4,6 +4,7 @@ import { db, users } from "../db";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
+import { JwtPayload } from "../middlewares/authMiddleware";
 
 export const registerSchema = z.object({
   userName: z.string().min(3, "Username must be at least 3 characters"),
@@ -152,6 +153,7 @@ export const loginUser = async (req: Request, res: Response) => {
           email: existingUser.email,
           username: existingUser.userName,
         },
+        accessToken,
       });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -190,6 +192,102 @@ export const logoutUser = async (req: Request, res: Response) => {
     .clearCookie("refreshToken", cookieOptions)
     .json({
       message: "Logout successful",
+    });
+};
+
+export const refreshAccessToken = async (req: Request, res: Response) => {
+  // extract refresh token from cookie
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({
+      error: "Unauthorized request",
+    });
+  }
+
+  // verify refresh token
+  let decodedToken: JwtPayload;
+  try {
+    decodedToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET!
+    ) as JwtPayload;
+  } catch (verificationError) {
+    return res.status(401).json({
+      error: "Invalid or expired refresh token",
+    });
+  }
+
+  // check if refresh token exist in db
+  const [existingUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.refreshToken, refreshToken))
+    .limit(1);
+  if (!existingUser) {
+    return res.status(401).json({
+      error: "Refresh token not found or has been revoked",
+    });
+  }
+
+  // find user
+  const [user] = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      userName: users.userName,
+    })
+    .from(users)
+    .where(eq(users.id, decodedToken.id))
+    .limit(1);
+
+  if (!user) {
+    return res.status(401).json({
+      error: "User associated with token not found",
+    });
+  }
+
+  // generate new access and refresh token
+  const tokenPayload = {
+    id: user.id,
+    email: user.email,
+    username: user.userName,
+  };
+  const newAccessToken = jwt.sign(
+    tokenPayload,
+    process.env.ACCESS_TOKEN_SECRET!,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
+
+  const newRefreshToken = jwt.sign(
+    tokenPayload,
+    process.env.REFRESH_TOKEN_SECRET!,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
+
+  // update refresh token in db
+  await db
+    .update(users)
+    .set({ refreshToken: newRefreshToken })
+    .where(eq(users.id, user.id));
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", newAccessToken, cookieOptions)
+    .cookie("refreshToken", newRefreshToken, cookieOptions)
+    .json({
+      message: "Token refreshed",
+      accessToken: newAccessToken,
     });
 };
 

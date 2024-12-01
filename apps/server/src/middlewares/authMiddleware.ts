@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { db, users } from "../db";
 import { eq } from "drizzle-orm";
+import axios from "axios";
 
 declare global {
   namespace Express {
@@ -15,7 +16,7 @@ declare global {
   }
 }
 
-interface JwtPayload {
+export interface JwtPayload {
   id: string;
   email: string;
   username: string;
@@ -43,10 +44,52 @@ export const verifyJWT = async (
         token,
         process.env.ACCESS_TOKEN_SECRET!
       ) as JwtPayload;
-    } catch (verificationError) {
-      return res.status(401).json({
-        error: "Invalid or expired access token",
-      });
+    } catch (verificationError: any) {
+      if (verificationError.name === "TokenExpiredError") {
+        try {
+          const refreshResponse = await axios.post(
+            `${process.env.SERVER_URL}/api/v1/users/refresh`,
+            {},
+            {
+              withCredentials: true,
+              headers: {
+                Cookie: req.headers.cookie,
+              },
+            }
+          );
+
+          // If refresh is successful, update cookies and set new authorization header
+          if (refreshResponse.headers["set-cookie"]) {
+            refreshResponse.headers["set-cookie"].forEach((cookie) => {
+              res.setHeader("Set-Cookie", cookie);
+            });
+          }
+
+          // If refresh is successful, retry the original request
+          if (refreshResponse.data.accessToken) {
+            req.headers[
+              "authorization"
+            ] = `Bearer ${refreshResponse.data.accessToken}`;
+
+            // Re-verify the new token
+            decodedToken = jwt.verify(
+              refreshResponse.data.accessToken,
+              process.env.ACCESS_TOKEN_SECRET!
+            ) as JwtPayload;
+          } else {
+            // Refresh failed
+            return res.status(401).json({ error: "Authentication failed" });
+          }
+        } catch (refreshError) {
+          console.log("REFRESH TOKEN", req.cookies?.refreshToken);
+
+          console.log("REFRESH ERROR", refreshError);
+
+          return res.status(401).json({ error: "Failed to refresh token" });
+        }
+      } else {
+        return res.status(401).json({ error: "Invalid access token" });
+      }
     }
 
     const [user] = await db
@@ -70,8 +113,6 @@ export const verifyJWT = async (
       email: user.email!,
       username: user.userName!,
     };
-
-    // console.log("USER: ", req.user);
 
     next();
   } catch (error) {
