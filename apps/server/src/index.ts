@@ -10,6 +10,7 @@ import { db, problemsTable, submissionsTable, testCasesTable } from "./db";
 import env from "./db/env";
 import { eq } from "drizzle-orm";
 import userRouter from "./routes/userRoutes";
+import { verifyJWT } from "./middlewares/authMiddleware";
 
 const app = express();
 app
@@ -127,7 +128,7 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get("/api/problems", async (req, res) => {
+app.get("/api/problems", verifyJWT, async (req, res) => {
   try {
     const result = await db
       .select({

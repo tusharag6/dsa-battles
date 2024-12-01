@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/userController";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../controllers/userController";
+import { verifyJWT } from "../middlewares/authMiddleware";
 
 const router: Router = Router();
 
@@ -7,7 +12,7 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 
 //secured routes
-// router.route("/logout").post(verifyJWT,  logoutUser)
+router.route("/logout").post(verifyJWT, logoutUser);
 // router.route("/refresh-token").post(refreshAccessToken)
 // router.route("/change-password").post(verifyJWT, changeCurrentPassword)
 // router.route("/current-user").get(verifyJWT, getCurrentUser)

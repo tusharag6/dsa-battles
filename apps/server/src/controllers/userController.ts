@@ -138,7 +138,6 @@ export const loginUser = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict" as const,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     };
 
     // return response with cookies and user info
@@ -173,12 +172,16 @@ export const loginUser = async (req: Request, res: Response) => {
 };
 
 export const logoutUser = async (req: Request, res: Response) => {
-  // TODO: remove refresh token, (required id: req.user.id: middleware)
+  await db
+    .update(users)
+    .set({
+      refreshToken: null,
+    })
+    .where(eq(users.id, req.user?.id!));
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict" as const,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   };
 
   return res
