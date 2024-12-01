@@ -5,6 +5,7 @@ import {
   numeric,
   pgEnum,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
@@ -101,6 +102,21 @@ const submissionsTable = pgTable("submissions", {
   callbackUrl: varchar("callback_url"),
   additionalFiles: customType({ dataType: () => "bytea" })("additional_files"),
   enableNetwork: boolean("enable_network"),
+});
+
+export const users = pgTable("user", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  userName: text("userName").unique(),
+  email: text("email").unique(),
+  password: text("password"),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+  refreshToken: text("refreshToken"),
+  created_at: timestamp("created_at").notNull().defaultNow(),
+  updated_at: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export {

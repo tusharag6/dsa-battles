@@ -208,3 +208,48 @@ Here are five unique game mode ideas that can bring variety and excitement to yo
    Players are given buggy code and must fix it to pass predefined test cases.
    Points awarded based on speed and accuracy.
    Emphasizes debugging skills over problem-solving from scratch.
+
+# Auth Flow
+
+## Register Flow
+
+fe -> be: POST /auth/register
+be -> cache/Rate Limiter: check rate limit
+RL -> be within limits
+be: generate salt and pepper Hash with argon2
+be -> db: store user + hash
+
+## Login Flow
+
+fe ->be: POST /auth/login
+be -> cache/Rate Limiter: check rate limit
+RL -> be within limits
+be -> db: query user
+db -> be: return user + hash
+be: verify password, generate Access and Refresh token, create CSRF token
+be -> db: store refresh token + fingerprint
+be -> fe: set cookies: HTTP Only, return csrf token
+
+## Protected Route Access
+
+user -> fe: request protected route
+fe -> be: request + Access Token + CSRF
+be: validate JWT, check session fingerprint, verify CSRF Token
+be -> RL: update rate limit
+be -> db: log access(GDPR)
+be -> fe: Access Token Expired but valid refresh token then issue new access token, allow/deny access
+fe -> user: show content/error
+
+## TODO
+
+Forgot Password
+Email Verification
+Social Oauth
+
+Route Protection
+
+- Rate Limiting
+- Security Logging
+- session fingerprinting
+- token validation
+- csrf protection

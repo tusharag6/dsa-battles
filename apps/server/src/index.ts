@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import express, { response } from "express";
 import morgan from "morgan";
 import { Server as SocketIOServer } from "socket.io";
@@ -8,6 +9,7 @@ import axios from "axios";
 import { db, problemsTable, submissionsTable, testCasesTable } from "./db";
 import env from "./db/env";
 import { eq } from "drizzle-orm";
+import userRouter from "./routes/userRoutes";
 
 const app = express();
 app
@@ -15,12 +17,16 @@ app
   .use(morgan("dev"))
   .use(express.json())
   .use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }))
+  .use(cookieParser())
   .get("/message/:name", (req, res) =>
     res.json({ message: `Hello ${req.params.name}` })
   )
   .get("/status", (_, res) => res.json({ ok: true }));
 
 const httpServer = createServer(app);
+
+//routes declaration
+app.use("/api/v1/users", userRouter);
 
 const io = new SocketIOServer(httpServer, {
   cors: { origin: "*", methods: ["GET", "POST"], credentials: true },

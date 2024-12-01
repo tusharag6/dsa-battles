@@ -8,6 +8,13 @@
       "when": 1727432300601,
       "tag": "0000_living_kabuki",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1733049158910,
+      "tag": "0001_charming_sir_ram",
+      "breakpoints": true
     }
   ]
 }
