@@ -1,0 +1,11 @@
+{
+  "name": "@dsabattle/tsconfig",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "ISC"
+}
