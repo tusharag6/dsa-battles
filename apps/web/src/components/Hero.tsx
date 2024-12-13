@@ -18,26 +18,6 @@ export default function Hero() {
             </div>
             {/* <span className="text-xl font-bold">CodeAscend</span> */}
           </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              to="#"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Solo Challenge
-            </Link>
-            <Link
-              to="#"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Team Battles
-            </Link>
-            <Link
-              to="#"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Leaderboard
-            </Link>
-          </nav>
           <Button asChild>
             <Link to="/login">Sign In</Link>
           </Button>
@@ -46,16 +26,15 @@ export default function Hero() {
 
       {/* Main Section */}
       <main className="flex-1 mx-auto  flex items-center justify-center overflow-hidden">
-        <div className="grid md:grid-cols-2 gap-12 items-center px-20">
+        <div className="grid md:grid-cols-2 gap-12 items-center max-w-7xl">
           {/* Text Section */}
-          <div className="space-y-6 text-center md:text-left">
+          <div className="space-y-4 text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Code. Compete. Conquer.
+              Code. Compete. Ascend.
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground">
-              Transform your coding journey from ordinary to extraordinary.
-              CodeAscend isn't just a platform—it's your digital arena where
-              algorithms become your weapons and logic is your strategy.
+            <p className="text-lg text-muted-foreground">
+              Level up your coding skills through interactive challenges,
+              tournaments, and real-time coding battles.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Button
@@ -69,8 +48,6 @@ export default function Hero() {
 
           {/* Image Section */}
           <div className="relative flex justify-center">
-            <div className="absolute -top-8 -right-8 w-48 h-48 bg-primary rounded-full blur-[120px] opacity-30" />
-            <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-secondary rounded-full blur-[120px] opacity-30" />
             <img
               src="/hero.jpeg"
               width={500}

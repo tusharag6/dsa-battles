@@ -4,8 +4,10 @@ import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
+import { useNavigate } from "react-router-dom";
 
 export default function MatchmakingPage() {
+  const navigate = useNavigate();
   const [playersFound, setPlayersFound] = useState(0);
   const [searching, setSearching] = useState(true);
   const totalPlayers = 6;
@@ -39,11 +41,16 @@ export default function MatchmakingPage() {
     return () => clearInterval(tipInterval);
   }, []);
 
+  const handleExitGame = () => {
+    setSearching(false);
+    navigate("/game/modes");
+  };
+
   return (
     <BackgroundGradientAnimation>
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-xl w-full">
-          <div className="relative rounded-lg p-8">
+      <div className="min-h-screen flex items-center justify-center p-4 relative z-20">
+        <div className="max-w-xl w-full rounded-lg shadow-lg">
+          <div className="rounded-lg p-8">
             <div className="flex flex-col items-center space-y-8">
               <div className="w-full text-center space-y-4">
                 <h1 className="text-3xl font-bold text-foreground mb-4">
@@ -75,7 +82,7 @@ export default function MatchmakingPage() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => setSearching(false)}
+                  onClick={handleExitGame}
                 >
                   Exit
                 </Button>

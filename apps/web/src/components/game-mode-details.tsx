@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   SheetHeader,
   SheetTitle,
@@ -29,7 +30,13 @@ interface GameModeDetailsProps {
 }
 
 export default function GameModeDetails({ mode }: GameModeDetailsProps) {
+  const navigate = useNavigate();
+
   if (!mode) return null;
+
+  const handleStartGame = () => {
+    navigate("/game/matchmaking");
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -42,7 +49,11 @@ export default function GameModeDetails({ mode }: GameModeDetailsProps) {
       <Separator className="my-4" />
       <div className="flex-grow overflow-y-auto px-1">
         <h3 className="text-lg font-semibold mb-2">Overview</h3>
-        <p className="text-sm text-muted-foreground mb-6">{mode.features}</p>
+        {mode.features.split("\n").map((paragraph, index) => (
+          <p className="text-sm text-muted-foreground mb-6" key={index}>
+            {paragraph}
+          </p>
+        ))}
         <div className="space-y-4">
           {mode.modes && (
             <div>
@@ -92,7 +103,9 @@ export default function GameModeDetails({ mode }: GameModeDetailsProps) {
       </div>
       <Separator className="my-4" />
       <SheetFooter>
-        <Button className="w-full">Start Game</Button>
+        <Button onClick={handleStartGame} className="w-full">
+          Start Game
+        </Button>
       </SheetFooter>
     </div>
   );
